@@ -24,7 +24,7 @@ Configure as variáveis de ambiente:
 Crie um arquivo .env na raiz do projeto e adicione a seguinte linha, substituindo pelo seu token da Finnhub:
 
 Copiar código
-FINNHUB_API_TOKEN=cr58e3hr01qrns9mlkf0cr58e3hr01qrns9mlkfg
+FINNHUB_API_TOKEN=*****************
 Como Rodar
 Backend
 Compile o TypeScript para JavaScript:
