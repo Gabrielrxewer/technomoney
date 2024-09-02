@@ -1,27 +1,15 @@
 import express from "express";
-import { getAllStockData } from "../services/stockService";
-import {
-  subscribeToSymbol,
-  unsubscribeFromSymbol,
-} from "../services/webSocketService";
+import { getYahooFinanceData } from "../services/stockService";
 
 const router = express.Router();
 
-router.get("/", (req, res) => {
-  const stockData = getAllStockData();
-  res.json(stockData);
-});
-
-router.post("/subscribe", (req, res) => {
-  const { symbol } = req.body;
-  subscribeToSymbol(symbol);
-  res.send(`Subscribed to ${symbol}`);
-});
-
-router.post("/unsubscribe", (req, res) => {
-  const { symbol } = req.body;
-  unsubscribeFromSymbol(symbol);
-  res.send(`Unsubscribed from ${symbol}`);
+router.get("/", async (req, res) => {
+  try {
+    const stockData = await getYahooFinanceData();
+    res.json(stockData);
+  } catch (error) {
+    res.status(500).json({ error: "Failed to fetch stock data" });
+  }
 });
 
 export default router;
