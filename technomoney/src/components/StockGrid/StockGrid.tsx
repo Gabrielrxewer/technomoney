@@ -1,79 +1,76 @@
-import React, { useEffect, useState } from "react";
+import React, { useState, useEffect } from "react";
+import '../StockGrid/StockGrid.css';
 import axios from "axios";
-import "./StockGrid.css";
 
-interface Stock {
-  ticker: string;
-  price: number | null;
-  volume: number | null;
-  change: number | null;
+interface StockData {
+  date: string;
+  open: number;
+  high: number;
+  low: number;
+  close: number;
+  volume: number;
+  adjclose: number;
 }
 
-const StockGrid: React.FC = () => {
-  const [stocks, setStocks] = useState<Stock[]>([]);
+const StockTable: React.FC = () => {
+  const [data, setData] = useState<StockData[]>([]);
 
   useEffect(() => {
-    const fetchStockData = async () => {
+    const fetchData = async () => {
       try {
-        const response = await axios.get("http://localhost:5001/api/stocks");
-        console.log("Response data:", response.data);
-        setStocks(response.data);
+        const response = await axios.get<any[]>("http://localhost:5001/api/stocks");
+        const stockData = response.data;
+
+        const formattedData = Object.keys(stockData[1]).map((key) => {
+          const entry = stockData[1][key];
+          return {
+            date: entry.date,
+            open: entry.open,
+            high: entry.high,
+            low: entry.low,
+            close: entry.close,
+            volume: entry.volume,
+            adjclose: entry.adjclose,
+          };
+        });
+
+        setData(formattedData);
       } catch (error) {
-        console.error("Erro ao buscar dados do servidor:", error);
+        console.error("Nenhum dado foi retornado pela API:", error);
       }
     };
 
-    fetchStockData();
+    fetchData();
   }, []);
 
   return (
-    <div className="stock-grid-container">
-      <h1>Market Overview</h1>
-      <table className="stock-table">
-        <thead>
-          <tr>
-            <th>Ticker</th>
-            <th>Price</th>
-            <th>Change (%)</th>
-            <th>Volume</th>
+    <table>
+      <thead>
+        <tr>
+          <th>Date</th>
+          <th>Open</th>
+          <th>High</th>
+          <th>Low</th>
+          <th>Close</th>
+          <th>Volume</th>
+          <th>Adj Close</th>
+        </tr>
+      </thead>
+      <tbody>
+        {data.map((item, index) => (
+          <tr key={index}>
+            <td>{item.date}</td>
+            <td>{item.open}</td>
+            <td>{item.high}</td>
+            <td>{item.low}</td>
+            <td>{item.close}</td>
+            <td>{item.volume}</td>
+            <td>{item.adjclose}</td>
           </tr>
-        </thead>
-        <tbody>
-          {stocks.length === 0 ? (
-            <tr>
-              <td colSpan={4}>No data available</td>
-            </tr>
-          ) : (
-            stocks.map((stock, index) => (
-              <tr key={index}>
-                <td>{stock.ticker}</td>
-                <td>
-                  {stock.price !== null ? `$${stock.price.toFixed(2)}` : "N/A"}
-                </td>
-                <td
-                  style={{
-                    color:
-                      stock.change !== null && stock.change >= 0
-                        ? "green"
-                        : "red",
-                  }}
-                >
-                  {stock.change !== null
-                    ? `${stock.change.toFixed(2)}%`
-                    : "N/A"}
-                </td>
-                <td>
-                  {stock.volume !== null
-                    ? stock.volume.toLocaleString()
-                    : "N/A"}
-                </td>
-              </tr>
-            ))
-          )}
-        </tbody>
-      </table>
-    </div>
+        ))}
+      </tbody>
+    </table>
   );
 };
 
-export default StockGrid;
+export default StockTable;
