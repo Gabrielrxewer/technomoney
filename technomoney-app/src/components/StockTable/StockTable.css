@@ -1,0 +1,58 @@
+.table-container {
+  padding: 20px;
+  background-color: #000;
+  min-height: 80vh;
+}
+
+.stock-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.stock-table thead {
+  background-color: #333;
+}
+
+.stock-table th, .stock-table td {
+  border: 1px solid #555;
+  padding: 10px;
+  color: #fff;
+  font-family: 'Orbitron', sans-serif;
+}
+
+.stock-table tbody tr:nth-child(even) {
+  background-color: #222;
+}
+
+.stock-table tbody tr:hover {
+  background-color: #444;
+}
+
+.pagination {
+  display: flex;
+  justify-content: center;
+  margin-top: 20px;
+}
+
+.pagination button {
+  background-color: #222;
+  color: #fff;
+  border: none;
+  padding: 10px 15px;
+  margin: 0 5px;
+  cursor: pointer;
+  font-family: 'Orbitron', sans-serif;
+}
+
+.pagination button.active {
+  background-color: #00f;
+}
+
+.pagination button:hover:not(.active) {
+  background-color: #333;
+}
+
+.pagination button:disabled {
+  background-color: #555;
+  cursor: not-allowed;
+}
