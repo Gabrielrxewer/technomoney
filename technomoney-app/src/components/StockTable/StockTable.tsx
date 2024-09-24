@@ -1,8 +1,11 @@
 import React, { useState, useEffect } from "react";
 import "./StockTable.css";
 import axios from "axios";
+import { Table } from 'antd';
+import { ArrowUpOutlined, ArrowDownOutlined } from '@ant-design/icons';
 
 interface StockData {
+  key: number;
   date: string;
   open: number;
   high: number;
@@ -14,8 +17,6 @@ interface StockData {
 
 const StockTable: React.FC = () => {
   const [data, setData] = useState<StockData[]>([]);
-  const [currentPage, setCurrentPage] = useState<number>(1);
-  const recordsPerPage = 10;
 
   useEffect(() => {
     const fetchData = async () => {
@@ -25,9 +26,10 @@ const StockTable: React.FC = () => {
         );
         const stockData = response.data;
 
-        const formattedData = Object.keys(stockData[1]).map((key) => {
+        const formattedData = Object.keys(stockData[1]).map((key, index) => {
           const entry = stockData[1][key];
           return {
+            key: index,
             date: entry.date,
             open: entry.open,
             high: entry.high,
@@ -47,67 +49,81 @@ const StockTable: React.FC = () => {
     fetchData();
   }, []);
 
-  // Lógica de paginação
-  const indexOfLastRecord = currentPage * recordsPerPage;
-  const indexOfFirstRecord = indexOfLastRecord - recordsPerPage;
-  const currentRecords = data.slice(indexOfFirstRecord, indexOfLastRecord);
-  const totalPages = Math.ceil(data.length / recordsPerPage);
-
-  const paginate = (pageNumber: number) => setCurrentPage(pageNumber);
-
-  const nextPage = () => {
-    if (currentPage < totalPages) setCurrentPage((prev) => prev + 1);
-  };
-
-  const prevPage = () => {
-    if (currentPage > 1) setCurrentPage((prev) => prev - 1);
-  };
+  const columns = [
+    {
+      title: 'Open',
+      dataIndex: 'open',
+      key: 'open',
+    },
+    {
+      title: 'Low',
+      dataIndex: 'low',
+      key: 'low',
+    },
+    {
+      title: 'High',
+      dataIndex: 'high',
+      key: 'high',
+    },
+    {
+      title: 'Close',
+      dataIndex: 'close',
+      key: 'close',
+      render: (_: any, record: StockData) => {
+        if (record.close > record.open) {
+          return (
+            <>
+              <ArrowUpOutlined style={{ color: 'green' }} /> {record.close}
+            </>
+          );
+        } else if (record.close < record.open) {
+          return (
+            <>
+              <ArrowDownOutlined style={{ color: 'red' }} /> {record.close}
+            </>
+          );
+        } else {
+          return record.close;
+        }
+      },
+    },
+    {
+      title: 'Adj Close',
+      dataIndex: 'adjclose',
+      key: 'adjclose',
+      render: (_: any, record: StockData) => {
+        if (record.adjclose > record.open) {
+          return (
+            <>
+              <ArrowUpOutlined style={{ color: 'green' }} /> {record.adjclose}
+            </>
+          );
+        } else if (record.adjclose < record.open) {
+          return (
+            <>
+              <ArrowDownOutlined style={{ color: 'red' }} /> {record.adjclose}
+            </>
+          );
+        } else {
+          return record.adjclose;
+        }
+      },
+    },
+    {
+      title: 'Volume',
+      dataIndex: 'volume',
+      key: 'volume',
+    },
+    {
+      title: 'Date',
+      dataIndex: 'date',
+      key: 'date',
+    },
+  ];
 
   return (
     <div className="table-container">
-      <table className="stock-table">
-        <thead>
-          <tr>
-            <th>Open</th>
-            <th>Low</th>
-            <th>High</th>
-            <th>Close</th>
-            <th>Adj Close</th>
-            <th>Volume</th>
-            <th>Date</th>
-          </tr>
-        </thead>
-        <tbody>
-          {currentRecords.map((item, index) => (
-            <tr key={index}>
-              <td>{item.open}</td>
-              <td>{item.low}</td>
-              <td>{item.high}</td>
-              <td>{item.close}</td>
-              <td>{item.adjclose}</td>
-              <td>{item.volume}</td>
-              <td>{item.date}</td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
-      <div className="pagination">
-        <button onClick={prevPage} disabled={currentPage === 1}>
-          Prev
-        </button>
-        {[...Array(totalPages)].map((_, i) => (
-          <button
-            key={i + 1}
-            onClick={() => paginate(i + 1)}
-            className={currentPage === i + 1 ? "active" : ""}
-          >
-            {i + 1}
-          </button>
-        ))}
-        <button onClick={nextPage} disabled={currentPage === totalPages}>
-          Next
-        </button>
-      </div>
+      <Table dataSource={data} columns={columns} pagination={{ pageSize: 10 }} />
     </div>
   );
 };
