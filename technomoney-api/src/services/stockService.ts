@@ -29,7 +29,6 @@ export const getYahooFinanceData = async (): Promise<StockData[]> => {
       params: {
         symbol: SYMBOL,
         interval: INTERVAL,
-        range: RANGE,
         diffandsplits: false,
       },
       headers: {

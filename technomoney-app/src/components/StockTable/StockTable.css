@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Orbitron&display=swap');
+@import url("https://fonts.googleapis.com/css2?family=Orbitron&display=swap");
 
 .table-container {
   padding: 20px;
@@ -9,7 +9,7 @@
 .ant-table {
   background-color: #000;
   color: #fff;
-  font-family: 'Orbitron', sans-serif;
+  font-family: "Orbitron", sans-serif;
 }
 
 .ant-table-thead > tr > th {
@@ -18,20 +18,30 @@
 }
 
 .ant-table-tbody > tr > td {
-  background-color: #000;
-  color: #fff;
+  background-color: #000 !important;
+  color: #fff !important;
 }
 
 .ant-table-tbody > tr:nth-child(even) > td {
-  background-color: #222;
+  background-color: #222 !important;
 }
 
 .ant-table-tbody > tr:hover > td {
-  background-color: #444;
+  background-color: #2b2b2b !important;
+}
+
+.ant-table-tbody > tr.ant-table-row-selected > td {
+  background-color: #2b2b2b !important;
+}
+
+.ant-table-cell {
+  background-color: inherit !important;
+  color: inherit !important;
 }
 
 .ant-pagination-item-active {
   background-color: #00f;
+  color: #fff;
 }
 
 .ant-pagination-item-link,
@@ -43,5 +53,10 @@
 
 .ant-pagination-item:hover,
 .ant-pagination-item-link:hover {
-  background-color: #333;
+  background-color: #242424;
+  color: #fff;
+}
+
+.ant-pagination-item:hover > a {
+  color: #fff;
 }
