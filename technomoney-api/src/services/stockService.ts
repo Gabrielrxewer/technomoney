@@ -21,7 +21,6 @@ const API_URL =
   "https://yahoo-finance15.p.rapidapi.com/api/v1/markets/stock/history";
 const SYMBOL = "AAPL";
 const INTERVAL = "3mo";
-const RANGE = "3mo";
 
 export const getYahooFinanceData = async (): Promise<StockData[]> => {
   try {
